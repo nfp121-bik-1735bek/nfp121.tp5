@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.ListIterator;
+
 
 public class JPanelListe extends JPanel implements ActionListener, ItemListener {
 
@@ -63,6 +65,10 @@ public class JPanelListe extends JPanel implements ActionListener, ItemListener 
         add(texte, "Center");
 
         boutonRechercher.addActionListener(this);
+        boutonRetirer.addActionListener(this);
+        boutonOccurrences.addActionListener(this);
+        ordreCroissant.addItemListener(this);
+        ordreDecroissant.addItemListener(this);
         // à compléter;
 
     }
@@ -95,9 +101,10 @@ public class JPanelListe extends JPanel implements ActionListener, ItemListener 
 
     public void itemStateChanged(ItemEvent ie) {
         if (ie.getSource() == ordreCroissant)
-            ;// à compléter
+            Collections.sort(liste);
+            
         else if (ie.getSource() == ordreDecroissant)
-            ;// à compléter
+            Collections.sort(liste,new sortDecroissant());// à compléter
 
         texte.setText(liste.toString());
     }
@@ -107,7 +114,26 @@ public class JPanelListe extends JPanel implements ActionListener, ItemListener 
         // à compléter
         // à compléter
         // à compléter
+        if(prefixe != null){
+            ListIterator < String > listIterator = liste.listIterator();
+            while(listIterator.hasNext()){
+                String temp = listIterator.next();
+                if (temp.length() >= prefixe.length() && temp.substring(0,prefixe.length()).equals(prefixe)){
+                    listIterator.remove();
+                    resultat = true;
+                    occurrences.put(temp,occurrences.get(temp)-1);
+                }
+            }
+            
+        }
         return resultat;
+    }
+    private class sortDecroissant implements Comparator<String>{
+        
+        public int compare(String a, String b){
+            return b.compareTo(a);
+        }
+        
     }
 
 }
